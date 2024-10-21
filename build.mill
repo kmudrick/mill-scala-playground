@@ -1,0 +1,39 @@
+package build
+
+import mill._
+import mill.contrib.scoverage.ScoverageModule
+import scalalib._
+import scalafmt._
+import publish._
+import $ivy.`com.lihaoyi::mill-contrib-scoverage:`
+
+object V {
+    object Libs {
+        val scalatest = "0.3.5"
+        val scoverage = "2.1.1"
+        val utest = "0.8.4"
+        val zio = "2.1.9"
+        val zioJson = "0.7.3"
+    }
+    object Scala {
+        val version = "3.3.4"
+    }
+}
+
+object `package` extends RootModule with ScoverageModule with ScalaModule with ScalafmtModule {
+
+    def ivyDeps = Agg(
+        ivy"dev.zio::zio-json:${V.Libs.zioJson}"
+    )
+
+    def scalaVersion = V.Scala.version
+    def scoverageVersion = V.Libs.scoverage
+
+    object test extends ScoverageTests with TestModule.Utest {
+        def ivyDeps = Agg(
+            ivy"com.lihaoyi::utest:${V.Libs.utest}"
+        )
+        def testFramework = "utest.runner.Framework"
+    }
+
+}
