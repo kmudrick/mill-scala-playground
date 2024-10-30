@@ -10,7 +10,7 @@ import $ivy.`com.lihaoyi::mill-contrib-scoverage:`
 object V {
     object Libs {
         val scalatest = "0.3.5"
-        val scoverage = "2.1.1"
+        val scoverage = "2.2.1"
         val utest = "0.8.4"
         val zio = "2.1.9"
         val zioJson = "0.7.3"

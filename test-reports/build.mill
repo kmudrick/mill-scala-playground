@@ -1,0 +1,32 @@
+package build
+
+import mill._
+import mill.contrib.scoverage.ScoverageModule
+
+import scalalib._
+import scalafmt._
+import $ivy.`com.lihaoyi::mill-contrib-scoverage:`
+
+trait FooModule extends ScoverageModule with ScalaModule with ScalafmtModule {
+
+    def scoverageVersion = "2.2.1"
+
+    object test extends ScoverageTests with TestModule.ZioTest {
+        def ivyDeps = Agg(
+            ivy"dev.zio::zio-test:2.1.11",
+            ivy"dev.zio::zio-test-sbt:2.1.11",
+        )
+    }
+
+}
+
+trait FooCrossModule extends CrossScalaModule with FooModule
+
+// "mill __.test" does not produce out/foo/$version/test/test.dest/test-report.xml
+val scalaVersions = Seq("2.13.15", "2.12.20", "3.5.2")
+object foo extends Cross[FooCrossModule](scalaVersions)
+
+// "mill test" will produce: out/test/test.dest/test-report.xml
+// object `package` extends RootModule with FooModule {
+//     def scalaVersion = "3.5.2"
+// }
